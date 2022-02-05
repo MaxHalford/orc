@@ -1,25 +1,19 @@
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import List
 
 import regex
 
 
-@dataclass
-class Edit:
-    """
-
-    Parameters
-    ----------
-    at
-        Location in the candidate.
-
-    """
-
-    at: int
+class Edit(ABC):
+    @abstractmethod
+    def do(self, s: str) -> str:
+        ...
 
 
 @dataclass
 class Substitution(Edit):
+    at: int
     new: str
 
     def do(self, s: str) -> str:
@@ -28,6 +22,7 @@ class Substitution(Edit):
 
 @dataclass
 class Insertion(Edit):
+    at: int
     new: str
 
     def do(self, s: str) -> str:
@@ -36,12 +31,14 @@ class Insertion(Edit):
 
 @dataclass
 class Deletion(Edit):
+    at: int
+
     def do(self, s: str) -> str:
         return s[: self.at] + s[self.at + 1 :]
 
 
 @dataclass
-class Edits:
+class Edits(Edit):
     substitutions: List[Substitution] = field(default_factory=list)
     insertions: List[Insertion] = field(default_factory=list)
     deletions: List[Deletion] = field(default_factory=list)
@@ -59,13 +56,9 @@ class Edits:
         yield from self.insertions
         yield from self.deletions
 
-    def do_iter(self, s):
+    def do(self, s: str):
         for edit in self:
-            yield (s := edit.do(s))
-
-    def do(self, s):
-        for s in self.do_iter(s):
-            pass
+            s = edit.do(s)
         return s
 
     @classmethod

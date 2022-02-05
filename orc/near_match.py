@@ -21,3 +21,12 @@ class NearMatch:
             end=match.end(),
             edits=orc.Edits.from_regex(match, specimen),
         )
+
+    def __repr__(self):
+        candidate = self.candidate
+        s = f"{candidate}\n"
+        for edit in self.edits:
+            s += " " * edit.at + edit.__class__.__name__[0] + "\n"
+            candidate = edit.do(candidate)
+            s += f"{candidate}\n"
+        return s
