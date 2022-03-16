@@ -63,7 +63,6 @@ class Edits(Edit):
 
     @classmethod
     def from_regex(cls, match: regex.Match, specimen: str):
-
         return cls(
             substitutions=[
                 Substitution(
@@ -78,18 +77,22 @@ class Edits(Edit):
                 for at in match.fuzzy_changes[0]
             ],
             insertions=[
-                Insertion(at - match.start(), specimen[at - match.start()])
+                Insertion(
+                    at - match.start(),
+                    specimen[
+                        at
+                        - match.start()
+                        - sum(1 for x in match.fuzzy_changes[1] if x < at)
+                    ],
+                )
                 for at in match.fuzzy_changes[2]
             ],
-            deletions=[Deletion(at - match.start()) for at in match.fuzzy_changes[1]],
-        )
-
-    def invert(self, target: str):
-        return Edits(
-            substitutions=self.substitutions,
-            insertions=[
-                Insertion(deletion.at, target[deletion.at - len(self.deletions)])
-                for deletion in self.deletions
+            deletions=[
+                Deletion(
+                    at
+                    - match.start()
+                    + sum(1 for x in match.fuzzy_changes[2] if x < at)
+                )
+                for at in match.fuzzy_changes[1]
             ],
-            deletions=[Deletion(insertion.at) for insertion in self.insertions],
         )

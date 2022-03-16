@@ -29,4 +29,4 @@ class NearMatch:
             s += " " * edit.at + edit.__class__.__name__[0] + "\n"
             candidate = edit.do(candidate)
             s += f"{candidate}\n"
-        return s
+        return s.rstrip()

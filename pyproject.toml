@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "clavier"
+name = "orc"
 version = "0.1.0"
 description = "Parsing structured information from OCR outputs"
 authors = ["MaxHalford <maxhalford25@gmail.com>"]
