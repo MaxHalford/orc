@@ -14,6 +14,7 @@ class Edit(ABC):
 @dataclass
 class Substitution(Edit):
     at: int
+    old: str
     new: str
 
     def do(self, s: str) -> str:
@@ -31,6 +32,7 @@ class Insertion(Edit):
 
 @dataclass
 class Deletion(Edit):
+    old: str
     at: int
 
     def do(self, s: str) -> str:
@@ -61,13 +63,30 @@ class Edits(Edit):
             s = edit.do(s)
         return s
 
+    def __neg__(self):
+        return Edits(
+            substitutions=[
+                Substitution(
+                    at=s.at
+                    + sum(1 for i in self.insertions if i.at < s.at)
+                    - sum(1 for d in self.deletions if d.at < s.at),
+                    old=s.new,
+                    new=s.old,
+                )
+                for s in self.substitutions
+            ],
+            insertions=[Insertion(at=d.at, new=d.old) for d in self.deletions],
+            deletions=[Deletion(at=i.at, old=i.new) for i in self.insertions],
+        )
+
     @classmethod
     def from_regex(cls, match: regex.Match, specimen: str):
         return cls(
             substitutions=[
                 Substitution(
-                    at - match.start(),
-                    specimen[
+                    at=at - match.start(),
+                    old=match.group()[at - match.start()],
+                    new=specimen[
                         at
                         - match.start()
                         - sum(1 for x in match.fuzzy_changes[1] if x < at)
@@ -78,8 +97,8 @@ class Edits(Edit):
             ],
             insertions=[
                 Insertion(
-                    at - match.start(),
-                    specimen[
+                    at=at - match.start(),
+                    new=specimen[
                         at
                         - match.start()
                         - sum(1 for x in match.fuzzy_changes[1] if x < at)
@@ -89,9 +108,10 @@ class Edits(Edit):
             ],
             deletions=[
                 Deletion(
-                    at
+                    at=at
                     - match.start()
-                    + sum(1 for x in match.fuzzy_changes[2] if x < at)
+                    + sum(1 for x in match.fuzzy_changes[2] if x < at),
+                    old=match.group()[at - match.start()],
                 )
                 for at in match.fuzzy_changes[1]
             ],
