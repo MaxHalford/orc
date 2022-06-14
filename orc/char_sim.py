@@ -97,5 +97,30 @@ def train_model():
         json.dump(sims, f, sort_keys=True, indent=4)
 
 
+def word_distance(
+    w1: str, w2: str, deletion_cost=1, insertion_cost=1
+) -> float:
+    """Levenshtein distance between two words."""
+
+    D = [[0 for _ in range(len(w1) + 1)] for _ in range(len(w2) + 1)]
+
+    for i in range(1, len(w2) + 1):
+        D[i][0] = i
+
+    for j in range(1, len(w1) + 1):
+        D[0][j] = j
+
+    for j, c1 in enumerate(w1, start=1):
+        for i, c2 in enumerate(w2, start=1):
+            substitution_cost = 0 if c1 == c2 else 1 - sim(c1, c2)
+            D[i][j] = min(
+                D[i - 1][j] + deletion_cost,
+                D[i][j - 1] + insertion_cost,
+                D[i - 1][j - 1] + substitution_cost,
+            )
+
+    return D[-1][-1]
+
+
 if __name__ == "__main__":
     train_model()
