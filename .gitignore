@@ -1,1 +1,4 @@
 *.pyc
+.venv
+data
+service_account.json

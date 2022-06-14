@@ -8,9 +8,17 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.8"
 regex = "^2022.1.18"
+Pillow = "^9.1.1"
+tqdm = "^4.64.0"
+pandas = "^1.4.2"
+boto3 = "^1.24.8"
+google-cloud-vision = "^2.7.3"
+dataclasses-json = "^0.5.7"
+rich = "^12.4.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
+ipykernel = "^6.13.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
