@@ -1,11 +1,13 @@
 import os
 import pathlib
 import json
+import textwrap
 from google.cloud import vision
 import abc
 import dataclasses
 from typing import Any, List
 import dataclasses_json
+import regex
 
 @dataclasses.dataclass
 class Point(dataclasses_json.DataClassJsonMixin):
@@ -39,7 +41,7 @@ class Page(dataclasses_json.DataClassJsonMixin):
     words: List[Word]
 
     def __repr__(self):
-        return " ".join(map(repr, self.words))
+        return "\n".join(textwrap.wrap(" ".join(map(repr, self.words))))
 
 
 @dataclasses.dataclass
@@ -48,6 +50,19 @@ class Document(dataclasses_json.DataClassJsonMixin):
 
     def __repr__(self):
         return "\n\n".join(map(repr, self.pages))
+
+    def search(self, pattern):
+
+        fuzzy_pattern = f"({pattern})" + "{s<=3,i<=3,d<=3}"
+
+        for page in self.pages:
+            text = repr(page)
+            print(text)
+
+            for m in regex.finditer(
+                fuzzy_pattern, text, regex.BESTMATCH#, overlapped=True
+            ):
+                print(m)
 
 
 class OCR(abc.ABC):
