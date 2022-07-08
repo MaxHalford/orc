@@ -1,6 +1,6 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import List
 
 import regex
 
@@ -41,9 +41,9 @@ class Deletion(Edit):
 
 @dataclass
 class Edits(Edit):
-    substitutions: List[Substitution] = field(default_factory=list)
-    insertions: List[Insertion] = field(default_factory=list)
-    deletions: List[Deletion] = field(default_factory=list)
+    substitutions: list[Substitution] = field(default_factory=list)
+    insertions: list[Insertion] = field(default_factory=list)
+    deletions: list[Deletion] = field(default_factory=list)
 
     def __post_init__(self):
         self.insertions = sorted(self.insertions, key=lambda x: x.at)
@@ -116,3 +116,27 @@ class Edits(Edit):
                 for at in match.fuzzy_changes[1]
             ],
         )
+
+
+@dataclass
+class NearMatch:
+    specimen: str
+    candidate: str
+    edits: Edits
+
+    @classmethod
+    def from_regex(cls, match: regex.Match, specimen: str):
+        return cls(
+            specimen=specimen,
+            candidate=match.group(),
+            edits=Edits.from_regex(match, specimen),
+        )
+
+    def __repr__(self):
+        candidate = self.candidate
+        s = f"{candidate}\n"
+        for edit in self.edits:
+            s += " " * edit.at + edit.__class__.__name__[0] + "\n"
+            candidate = edit.do(candidate)
+            s += f"{candidate}\n"
+        return s.rstrip()

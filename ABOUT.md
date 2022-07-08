@@ -1,0 +1,5 @@
+- [Anatomy of a Privacy-Safe Large-Scale Information Extraction System Over Email](https://marc.najork.org/pdfs/kdd2018.pdf)
+- [Migrating a Privacy-Safe Information Extraction System to a Software 2.0 Design](https://www.cidrdb.org/cidr2020/papers/p31-sheng-cidr20.pdf)
+- [How to Invest my Time: Lessons from Human-in-the-Loop Entity Extraction](https://cis.temple.edu/~edragut/papers/HITLEX-KDD19.pdf)
+- [Lecture Notes on Weak Supervision](https://cs229.stanford.edu/notes2019fall/weak_supervision_notes.pdf)
+- [A framework for designing document processing solutions](https://ljvmiranda921.github.io/notebook/2022/06/19/document-processing-framework/)
