@@ -20,6 +20,15 @@ rich = "^12.4.4"
 pytest = "^6.2.5"
 ipykernel = "^6.13.1"
 
+[tool.pytest.ini_options]
+addopts = [
+    "--verbose",
+    "--doctest-modules",
+    "--doctest-glob=README.md",
+    "--color=yes",
+]
+doctest_optionflags = "NORMALIZE_WHITESPACE NUMBER ELLIPSIS"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
