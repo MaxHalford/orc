@@ -1,6 +1,6 @@
 # orc 🧌
 
-ocr is a tool for parsing structured information from (messy) OCR outputs. This toolkit doesn't use fancy deep learning models. It focuses on simple and efficient algorithms that are practical enough to be used in battle.
+orc is a tool for parsing structured information from (messy) OCR outputs. This toolkit doesn't use fancy deep learning models. It focuses on simple and efficient algorithms that are practical enough to be used in battle.
 
 ## Usage
 
